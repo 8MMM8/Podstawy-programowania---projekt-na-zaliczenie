@@ -1,0 +1,153 @@
+# KOSZYK ZAKUPÓW
+
+import csv
+
+class Product:
+    def __init__(self, product_id, name, price):
+        self.id = product_id
+        self.name = name
+        self.price = price
+
+class ShoppingCart:
+    def __init__(self):
+        self.products = {}
+
+    def add_product(self, product, quantity = 1):
+        if product in self.products:
+            self.products[product][1] += quantity
+        else:
+            self.products[product] = [product, quantity]
+        print(f"Dodano {product.name.lower()} w ilości: {quantity}")
+
+    def remove_product(self, product, quantity = 1):
+        if product not in self.products:
+            print("Produktu nie ma w koszyku")
+            return
+
+        current_quantity = self.products[product][1]
+
+        if quantity >= current_quantity:
+            print(f"Produkt {product.name.lower()} usunięty całkowicie.")
+            del self.products[product]
+        else:
+            self.products[product][1] -= quantity
+            print(f"Usunięto {quantity} szt. produktu")
+
+    def show_cart(self):
+        if not self.products:
+            print("Koszyk jest pusty")
+            print()
+            return
+
+        sum = 0
+
+        print()
+        print("Zawartość koszyka: ")
+
+        for product, quantity in self.products.values():
+            value = product.price * quantity
+            sum += value
+            print("----------------------------------------------------")
+            print(f"{product.name} | cena: {product.price:.2f} zł | ilość: {quantity} | łącznie: {value:.2f} zł")
+        print("----------------------------------------------------")
+        print(f"Łączna cena: {sum:.2f} zł")
+        print()
+
+    def clear_cart(self):
+        self.products.clear()
+        print("Koszyk został wyczyszczony")
+
+    def save_csv(self, file_name):
+        with open(file_name, "w", encoding="utf-8", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["ID", "Produkt", "Cena", "Liczba Sztuk", "Łączna kwota"])
+
+            for product, quantity in self.products.values():
+                writer.writerow([product.id, product.name, product.price, quantity, product.price * quantity])
+        print(f"Zapisano koszyk do pliku: {file_name}")
+
+    def load_csv(self, file_name):
+        self.products.clear()
+        with open(file_name, "r", encoding="utf-8") as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                product = Product(int(row["ID"]), row["Produkt"], float(row["Cena"]))
+
+                quantity = int(row["Liczba Sztuk"])
+                self.products[product] = [product, quantity]
+        print(f"Wczytano koszyk z pliku: {file_name}")
+
+
+def main():
+    cart = ShoppingCart()
+    operation_num = 1
+
+    p1 = Product(1, "Chleb", 3.00)
+    p2 = Product(2, "Masło", 11.30)
+    p3 = Product(3, "Mleko", 4.20)
+    p4 = Product(4, "Ser", 9.99)
+    p5 = Product(5, "Kurczak", 8.50)
+    p6 = Product(6, "Pomidor", 2.50)
+    p7 = Product(7, "Ogórek", 1.30)
+
+    cart.show_cart()
+
+    cart.add_product(p1, 2)
+    cart.save_csv(f"operacja_{operation_num}.csv")
+    operation_num += 1
+
+    cart.add_product(p2, 1)
+    cart.save_csv(f"operacja_{operation_num}.csv")
+    operation_num += 1
+
+    cart.add_product(p3, 2)
+    cart.save_csv(f"operacja_{operation_num}.csv")
+    operation_num += 1
+
+    cart.add_product(p4, 3)
+    cart.save_csv(f"operacja_{operation_num}.csv")
+    operation_num += 1
+
+    cart.add_product(p5, 2)
+    cart.save_csv(f"operacja_{operation_num}.csv")
+    operation_num += 1
+
+    cart.add_product(p6, 6)
+    cart.save_csv(f"operacja_{operation_num}.csv")
+    operation_num += 1
+
+    cart.add_product(p7, 4)
+    cart.save_csv(f"operacja_{operation_num}.csv")
+    operation_num += 1
+
+    cart.show_cart()
+
+    cart.remove_product(p1, 3)
+    cart.save_csv(f"operacja_{operation_num}.csv")
+    operation_num += 1
+
+    cart.remove_product(p2, 2)
+    cart.save_csv(f"operacja_{operation_num}.csv")
+    operation_num += 1
+
+    cart.remove_product(p5, 1)
+    cart.save_csv(f"operacja_{operation_num}.csv")
+    operation_num += 1
+
+    cart.remove_product(p6, 3)
+    cart.save_csv(f"operacja_{operation_num}.csv")
+    operation_num += 1
+
+    cart.clear_cart()
+    cart.save_csv(f"operacja_{operation_num}.csv")
+    operation_num += 1
+
+    cart.show_cart()
+
+    cart.load_csv(f"operacja_7.csv")
+    cart.save_csv(f"operacja_{operation_num}.csv")
+
+    cart.show_cart()
+
+if __name__ == "__main__":
+    main()
