@@ -1,0 +1,60 @@
+# Dice Roller Program #
+
+import random
+
+#print("\u25CF \u250C \u2510 \u2502 \u2514 \u2518")
+# ● ┌ ┐ │ └ ┘
+
+dice_art = {
+    1: ("┌─────────┐",
+        "│         │",
+        "│    ●    │",
+        "│         │",
+        "└─────────┘"),
+    2: ("┌─────────┐",
+        "│  ●      │",
+        "│         │",
+        "│      ●  │",
+        "└─────────┘"),
+    3: ("┌─────────┐",
+        "│  ●      │",
+        "│    ●    │",
+        "│      ●  │",
+        "└─────────┘"),
+    4: ("┌─────────┐",
+        "│  ●   ●  │",
+        "│         │",
+        "│  ●   ●  │",
+        "└─────────┘"),
+    5: ("┌─────────┐",
+        "│  ●   ●  │",
+        "│    ●    │",
+        "│  ●   ●  │",
+        "└─────────┘"),
+    6: ("┌─────────┐",
+        "│  ●   ●  │",
+        "│  ●   ●  │",
+        "│  ●   ●  │",
+        "└─────────┘")
+}
+
+dice = []
+total = 0
+
+num_of_dice = int(input("How many dice?: "))
+
+for throw in range(num_of_dice):
+    dice.append(random.randint(1, 6))
+
+#for throw in range(num_of_dice):
+#    for line in dice_art.get(dice[throw]):
+#        print(line)
+
+for line in range(5):
+    for throw in dice:
+        print(dice_art.get(throw)[line], end="")
+    print()
+
+for throw in dice:
+    total += throw
+print(f"Total: {total}")
